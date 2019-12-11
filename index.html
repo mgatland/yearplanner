@@ -16,45 +16,61 @@
 <body>
 	<div class="container"></div>
   <script>
-  	let yearStart = Date.parse("2019-01-01")
+  	let yearStart = Date.parse("2020-01-01")
   	let events = []
   	events.push(
   		{name:"Year", color: "green", top:0, dates:[
-  			{start:"2019-01-01", end:"2019-12-31"}
+  			{start:"2020-01-01", end:"2020-12-31"}
   		]
   		}
   	)
   	events.push(
   		{name:"University of Auckland", color: "lightblue", top:1, dates:[
-  		{start:"2019-03-04", end:"2019-04-12"}, //half semester including exam time
-  		{start:"2019-04-28", end:"2019-06-07"},
-  		{start:"2019-07-22", end:"2019-08-30"},
-  		{start:"2019-09-16", end:"2019-10-25"},
+  		{start:"2020-03-02", end:"2020-04-10"},
+  		{start:"2020-04-28", end:"2020-06-05"},
+  		{start:"2020-07-20", end:"2020-08-30"},
+  		{start:"2020-09-14", end:"2020-10-23"},
   		]})
   	events.push(
   		{name:"Uni exams", color: "lightblue", top:1, dates:[
-  		{start:"2019-06-08", end:"2019-07-01"},
-  		{start:"2019-10-26", end:"2019-11-18"},
+  		{start:"2020-06-11", end:"2020-06-29"},
+  		{start:"2020-10-29", end:"2020-11-16"},
 
   		]})
   	events.push(
   		{name:"High School", color: "lightgreen", top:2, dates:[
-  		{start:"2019-02-07", end:"2019-04-12"}, //earliest start 2019-01-28
-  		{start:"2019-04-29", end:"2019-07-05"},
-  		{start:"2019-07-22", end:"2019-09-27"},
-  		{start:"2019-10-14", end:"2019-12-02"}, //latest end 2019-12-13
+  		{start:"2020-02-07", end:"2020-04-09"},
+  		{start:"2020-04-28", end:"2020-07-03"},
+  		{start:"2020-07-20", end:"2020-09-25"},
+  		{start:"2020-10-12", end:"2020-12-02"}, //end is guesstimated
   		]})
   	events.push(
   		{name:"(flex)", color: "#d1f5d1", top:2, dates:[
-  		{start:"2019-01-28", end:"2019-02-07"},
-  		{start:"2019-12-03", end:"2019-12-13"},
+  		{start:"2020-01-27", end:"2020-02-06"},
+  		{start:"2020-12-03", end:"2020-12-18"},
   		]})
+    events.push(
+      {name:"NCEA", color: "rgba(0, 0, 0, 0.2)", top:2, dates:[
+      {start:"2020-11-06", end:"2020-12-02"},
+      ]})
+
+    events.push(
+      {name:"*", color: "#ccc", top:1, dates:[
+      {start:"2020-02-06", end:"2020-02-06"}, // Waitangi Day
+      {start:"2020-04-10", end:"2020-04-13"}, // easter
+      {start:"2020-04-27", end:"2020-04-27"}, // Anzac Day
+      {start:"2020-06-01", end:"2020-06-01"}, // Queen's birthday
+      {start:"2020-10-26", end:"2020-10-26"}, // Labour Day
+      {start:"2020-12-25", end:"2020-12-31"}, // christmas
+      ]})
+
   	let scale = 4
   	for (let event of events) {
   		for (let span of event.dates) {
   		let start = convertDate(span.start)
   		let end = convertDate(span.end)
   		let width = (end - start) * scale
+      if (width === 0) width = 1 * scale
   		start = start * scale
   		let elementHTML = `<div class='calendarBlock' style='background-color: ${event.color}; top:${event.top * 20}px; left: ${start}px; width:${width}px'>${event.name}</div>`
   		document.querySelector(".container").innerHTML += elementHTML
@@ -65,10 +81,18 @@
   		document.querySelector(".container").innerHTML += elementHTML
 
   	document.addEventListener("mousedown", mouseDown)
-  	document.addEventListener("mousemove", mouseDown)
+  	document.addEventListener("mousemove", mouseMove)
 
-  	function mouseDown(e) {
+    function mouseDown(e) {
+      const newNode = document.querySelector(".girlCode").cloneNode(true)
+      newNode.classList.toggle('girlCode')
+      document.querySelector(".container").appendChild(newNode)
+    }
+
+  	function mouseMove(e) {
   		document.querySelector(".girlCode").style.left = e.clientX + "px"
+      const date = new Date(e.clientX * 86400000 / scale)
+      document.querySelector(".girlCode").innerHTML = "Girl Code " + date.getDate() + "/" + (date.getMonth() + 1)
   	}
 
 	function convertDate(date) {
